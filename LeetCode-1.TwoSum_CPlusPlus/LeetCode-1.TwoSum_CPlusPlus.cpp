@@ -9,28 +9,21 @@ class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
 
-        map<int, list<int>> indexs = map<int, list<int>>();
+        multimap<int, int> indexs = multimap<int, int>();
         for (int i = 0; i < nums.size(); ++i)
         {
-            map<int, list<int>>::iterator iter = indexs.find(nums[i]);
-            if (iter == indexs.end())
-                indexs[nums[i]] = list<int>{ i };
-            else
-                iter->second.push_back(i);
+            indexs.insert(pair<int, int>(nums[i], i));
         }
 
         int diff = 0;
         for (int i = 0; i < nums.size(); ++i)
         {
             diff = target - nums[i];
-            map<int, list<int>>::iterator iter = indexs.find(diff);
-            if (iter != indexs.end())
+            multimap<int, int>::iterator iter = indexs.find(diff);
+            for (; iter != indexs.end() && diff == iter->first; ++iter)
             {
-                for (list<int>::iterator j = iter->second.begin(); j != iter->second.end(); ++j)
-                {
-                    if (i != *j)
-                        return vector<int>{i, * j};
-                }
+                if (i != iter->second)
+                    return vector<int>{i, iter->second};
             }
         }
 
